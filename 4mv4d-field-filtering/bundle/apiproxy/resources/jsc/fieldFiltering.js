@@ -160,14 +160,15 @@
     }
     if (typeof fields === 'string' ){
       // transform GraphQL string into a hash of the desired kind.
-      // in: { prop1 prop3 { key1 } }
-      // out: { "prop1": true, "prop3" : { "key1" : true } }
+      // in: { prop1 prop3 { key1 } prop4 }
+      // out: { "prop1": true, "prop3" : { "key1" : true }, "prop4" : true }
       //
       fields = fields.replace(new RegExp('\\s+', 'g'), ' ')
         .replace(new RegExp('(.){', 'g'), '$1: {')
         .replace(new RegExp('([a-zA-Z_$][\\w$]*)(\\s+)', 'g'), '"$1" ')
         .replace(new RegExp('"\\s+(?!:)', 'g'), '" : true,')
-        .replace(new RegExp(',\\s*}', 'g'), '}');
+        .replace(new RegExp(',\\s*}', 'g'), '}')
+        .replace(new RegExp('}\\s+"', 'g'), '}, "');
       return JSON.parse(fields);
     }
     return null;
